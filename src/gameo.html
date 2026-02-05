@@ -1,87 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Animated Website</title>
+    <title>Galaxy Shooter</title>
 </head>
-<body style="font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #f0f0f0;">
-    <div style="position: relative; width: 100%; height: 100vh; overflow: hidden;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-weight: bold; color: #333;">Welcome to the Animated Website</div>
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(to bottom, #ff69b4, #ffe6cc);"></div>
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(to top, #ff69b4, #ffe6cc); animation: gradient 10s infinite;"></div>
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle, #ff69b4, #ffe6cc); animation: radial 10s infinite;"></div>
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(to right, #ff69b4, #ffe6cc); animation: gradient2 10s infinite;"></div>
-    </div>
-
-    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold; color: #333; animation: pulse 2s infinite;">
-        Click to Explore
-    </div>
-
+<body style="font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #000;">
+    <canvas id="gameCanvas" width="800" height="600" style="border: 1px solid #ccc;"></canvas>
     <script>
-        let gradient = document.querySelector('div:nth-child(3)');
-        let radial = document.querySelector('div:nth-child(4)');
-        let gradient2 = document.querySelector('div:nth-child(5)');
-        let pulse = document.querySelector('div:nth-child(6)');
+        let canvas = document.getElementById('gameCanvas');
+        let ctx = canvas.getContext('2d');
+        let player = { x: canvas.width / 2, y: canvas.height - 50 };
+        let enemies = [];
+        let bullets = [];
+        let score = 0;
 
-        gradient.style.animation = 'gradient 10s infinite';
-        radial.style.animation = 'radial 10s infinite';
-        gradient2.style.animation = 'gradient2 10s infinite';
-        pulse.style.animation = 'pulse 2s infinite';
+        // Draw player
+        function drawPlayer() {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(player.x, player.y, 50, 50);
+        }
 
-        document.addEventListener('click', () => {
-            gradient.style.animation = 'gradient2 10s infinite';
-            radial.style.animation = 'gradient 10s infinite';
-            gradient2.style.animation = 'radial 10s infinite';
-            pulse.style.animation = 'pulse2 2s infinite';
+        // Draw enemies
+        function drawEnemies() {
+            for (let i = 0; i < enemies.length; i++) {
+                ctx.fillStyle = '#f00';
+                ctx.fillRect(enemies[i].x, enemies[i].y, 50, 50);
+            }
+        }
+
+        // Draw bullets
+        function drawBullets() {
+            for (let i = 0; i < bullets.length; i++) {
+                ctx.fillStyle = '#0f0';
+                ctx.fillRect(bullets[i].x, bullets[i].y, 10, 10);
+            }
+        }
+
+        // Update game state
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw player
+            drawPlayer();
+
+            // Draw enemies
+            drawEnemies();
+
+            // Draw bullets
+            drawBullets();
+
+            // Update enemies
+            for (let i = 0; i < enemies.length; i++) {
+                enemies[i].y += 2;
+                if (enemies[i].y > canvas.height) {
+                    enemies.splice(i, 1);
+                }
+            }
+
+            // Update bullets
+            for (let i = 0; i < bullets.length; i++) {
+                bullets[i].y -= 5;
+                if (bullets[i].y < 0) {
+                    bullets.splice(i, 1);
+                }
+            }
+
+            // Check collisions
+            for (let i = 0; i < enemies.length; i++) {
+                for (let j = 0; j < bullets.length; j++) {
+                    if (enemies[i].x < bullets[j].x + 10 &&
+                        enemies[i].x + 50 > bullets[j].x &&
+                        enemies[i].y < bullets[j].y + 10 &&
+                        enemies[i].y + 50 > bullets[j].y) {
+                        enemies.splice(i, 1);
+                        bullets.splice(j, 1);
+                        score++;
+                    }
+                }
+            }
+
+            // Update score
+            document.title = 'Galaxy Shooter - Score: ' + score;
+
+            // Add new enemies
+            if (Math.random() < 0.05) {
+                enemies.push({ x: Math.random() * (canvas.width - 50), y: 0 });
+            }
+        }
+
+        // Handle keyboard input
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                player.x -= 5;
+            } else if (e.key === 'ArrowRight') {
+                player.x += 5;
+            } else if (e.key === ' ') {
+                bullets.push({ x: player.x + 20, y: player.y });
+            }
         });
-    </script>
 
-    <style>
-        @keyframes gradient {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        @keyframes radial {
-            0% {
-                transform: scale(1);
-            }
-            100% {
-                transform: scale(1.2);
-            }
-        }
-        @keyframes gradient2 {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(-360deg);
-            }
-        }
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        @keyframes pulse2 {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.5);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-    </style>
+        // Main game loop
+        setInterval(update, 16);
+    </script>
 </body>
 </html>
