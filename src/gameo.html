@@ -1,3 +1,67 @@
-// gameo.html
-// Created with Axion Studio
+<!-- gameo.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+</head>
+<body style="font-family: Arial, sans-serif; text-align: center;">
+    <h1 style="color: #00698f;">Tic Tac Toe</h1>
+    <div style="display: inline-block; border: 1px solid #ccc; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px;">
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 0)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 1)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 2)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 3)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 4)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 5)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 6)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 7)"></button>
+            <button style="width: 100px; height: 100px; font-size: 36px; border: none; border-radius: 10px; background-color: #f0f0f0; cursor: pointer;" onclick="markCell(this, 8)"></button>
+        </div>
+        <button style="margin-top: 20px; width: 100px; height: 40px; font-size: 18px; border: none; border-radius: 10px; background-color: #4CAF50; color: #fff; cursor: pointer;" onclick="resetGame()">Reset</button>
+    </div>
+    <script>
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
 
+        function markCell(cell, index) {
+            if (gameBoard[index] === '') {
+                gameBoard[index] = currentPlayer;
+                cell.innerHTML = currentPlayer;
+                checkWinner();
+                currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+            }
+        }
+
+        function checkWinner() {
+            let winningCombinations = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+
+            for (let i = 0; i < winningCombinations.length; i++) {
+                let combination = winningCombinations[i];
+                if (gameBoard[combination[0]] === gameBoard[combination[1]] && gameBoard[combination[1]] === gameBoard[combination[2]] && gameBoard[combination[0]] !== '') {
+                    alert('Player ' + gameBoard[combination[0]] + ' wins!');
+                    resetGame();
+                }
+            }
+        }
+
+        function resetGame() {
+            currentPlayer = 'X';
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            let cells = document.querySelectorAll('button');
+            for (let i = 0; i < cells.length - 1; i++) {
+                cells[i].innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
