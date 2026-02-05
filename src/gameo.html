@@ -1,193 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Snake and Ladder</title>
+    <title>Animated Website</title>
 </head>
-<body style="font-family: Arial, sans-serif; text-align: center;">
-    <h1 style="color: #00698f;">Snake and Ladder Game</h1>
-    <div style="display: inline-block; border: 1px solid #ccc; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-        <canvas id="gameBoard" width="400" height="400" style="border: 1px solid #ccc;"></canvas>
-        <p id="playerTurn" style="font-size: 18px;"></p>
-        <button id="rollDice" style="margin-top: 20px; width: 100px; height: 40px; font-size: 18px; border: none; border-radius: 10px; background-color: #4CAF50; color: #fff; cursor: pointer;">Roll Dice</button>
-        <p id="result" style="font-size: 18px;"></p>
+<body style="font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #f0f0f0;">
+    <div style="position: relative; width: 100%; height: 100vh; overflow: hidden;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-weight: bold; color: #333;">Welcome to the Animated Website</div>
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(to bottom, #ff69b4, #ffe6cc);"></div>
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(to top, #ff69b4, #ffe6cc); animation: gradient 10s infinite;"></div>
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle, #ff69b4, #ffe6cc); animation: radial 10s infinite;"></div>
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(to right, #ff69b4, #ffe6cc); animation: gradient2 10s infinite;"></div>
+    </div>
+
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold; color: #333; animation: pulse 2s infinite;">
+        Click to Explore
     </div>
 
     <script>
-        let playerPosition = 0;
-        let playerTurn = true;
-        let diceValue = 0;
-        let gameBoard = document.getElementById('gameBoard');
-        let ctx = gameBoard.getContext('2d');
-        let playerTurnElement = document.getElementById('playerTurn');
-        let rollDiceButton = document.getElementById('rollDice');
-        let resultElement = document.getElementById('result');
+        let gradient = document.querySelector('div:nth-child(3)');
+        let radial = document.querySelector('div:nth-child(4)');
+        let gradient2 = document.querySelector('div:nth-child(5)');
+        let pulse = document.querySelector('div:nth-child(6)');
 
-        // Draw game board
-        ctx.fillStyle = '#f0f0f0';
-        ctx.fillRect(0, 0, 400, 400);
+        gradient.style.animation = 'gradient 10s infinite';
+        radial.style.animation = 'radial 10s infinite';
+        gradient2.style.animation = 'gradient2 10s infinite';
+        pulse.style.animation = 'pulse 2s infinite';
 
-        for (let i = 1; i <= 10; i++) {
-            for (let j = 1; j <= 10; j++) {
-                let x = (j - 1) * 40;
-                let y = (i - 1) * 40;
-                ctx.strokeStyle = '#ccc';
-                ctx.strokeRect(x, y, 40, 40);
-
-                // Draw snake and ladder
-                if (i === 5 && j === 5) {
-                    ctx.fillStyle = '#ff0000';
-                    ctx.fillRect(x + 10, y + 10, 20, 20);
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '18px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('Snake', x + 20, y + 20);
-                } else if (i === 3 && j === 3) {
-                    ctx.fillStyle = '#00ff00';
-                    ctx.fillRect(x + 10, y + 10, 20, 20);
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '18px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('Ladder', x + 20, y + 20);
-                }
-
-                // Draw player position
-                if (playerPosition === (i - 1) * 10 + j) {
-                    ctx.fillStyle = '#0000ff';
-                    ctx.fillRect(x + 15, y + 15, 10, 10);
-                }
-            }
-        }
-
-        rollDiceButton.onclick = function() {
-            if (playerTurn) {
-                diceValue = Math.floor(Math.random() * 6) + 1;
-                resultElement.textContent = 'You rolled a ' + diceValue;
-                playerPosition += diceValue;
-
-                // Check if player landed on a snake or ladder
-                if (playerPosition === 25) {
-                    resultElement.textContent = 'You landed on a snake! You go back to position 5';
-                    playerPosition = 5;
-                } else if (playerPosition === 15) {
-                    resultElement.textContent = 'You landed on a ladder! You move forward to position 30';
-                    playerPosition = 30;
-                }
-
-                // Check if player won
-                if (playerPosition >= 100) {
-                    resultElement.textContent = 'You won!';
-                    rollDiceButton.disabled = true;
-                }
-
-                // Update player position on game board
-                ctx.fillStyle = '#f0f0f0';
-                ctx.fillRect(0, 0, 400, 400);
-
-                for (let i = 1; i <= 10; i++) {
-                    for (let j = 1; j <= 10; j++) {
-                        let x = (j - 1) * 40;
-                        let y = (i - 1) * 40;
-                        ctx.strokeStyle = '#ccc';
-                        ctx.strokeRect(x, y, 40, 40);
-
-                        // Draw snake and ladder
-                        if (i === 5 && j === 5) {
-                            ctx.fillStyle = '#ff0000';
-                            ctx.fillRect(x + 10, y + 10, 20, 20);
-                            ctx.fillStyle = '#fff';
-                            ctx.font = '18px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText('Snake', x + 20, y + 20);
-                        } else if (i === 3 && j === 3) {
-                            ctx.fillStyle = '#00ff00';
-                            ctx.fillRect(x + 10, y + 10, 20, 20);
-                            ctx.fillStyle = '#fff';
-                            ctx.font = '18px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText('Ladder', x + 20, y + 20);
-                        }
-
-                        // Draw player position
-                        if (playerPosition === (i - 1) * 10 + j) {
-                            ctx.fillStyle = '#0000ff';
-                            ctx.fillRect(x + 15, y + 15, 10, 10);
-                        }
-                    }
-                }
-
-                playerTurn = false;
-                playerTurnElement.textContent = 'Computer\'s turn';
-                setTimeout(function() {
-                    computerTurn();
-                }, 1000);
-            }
-        };
-
-        function computerTurn() {
-            diceValue = Math.floor(Math.random() * 6) + 1;
-            resultElement.textContent = 'Computer rolled a ' + diceValue;
-            playerPosition += diceValue;
-
-            // Check if computer landed on a snake or ladder
-            if (playerPosition === 25) {
-                resultElement.textContent = 'Computer landed on a snake! Computer goes back to position 5';
-                playerPosition = 5;
-            } else if (playerPosition === 15) {
-                resultElement.textContent = 'Computer landed on a ladder! Computer moves forward to position 30';
-                playerPosition = 30;
-            }
-
-            // Check if computer won
-            if (playerPosition >= 100) {
-                resultElement.textContent = 'Computer won!';
-                rollDiceButton.disabled = true;
-            }
-
-            // Update player position on game board
-            ctx.fillStyle = '#f0f0f0';
-            ctx.fillRect(0, 0, 400, 400);
-
-            for (let i = 1; i <= 10; i++) {
-                for (let j = 1; j <= 10; j++) {
-                    let x = (j - 1) * 40;
-                    let y = (i - 1) * 40;
-                    ctx.strokeStyle = '#ccc';
-                    ctx.strokeRect(x, y, 40, 40);
-
-                    // Draw snake and ladder
-                    if (i === 5 && j === 5) {
-                        ctx.fillStyle = '#ff0000';
-                        ctx.fillRect(x + 10, y + 10, 20, 20);
-                        ctx.fillStyle = '#fff';
-                        ctx.font = '18px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText('Snake', x + 20, y + 20);
-                    } else if (i === 3 && j === 3) {
-                        ctx.fillStyle = '#00ff00';
-                        ctx.fillRect(x + 10, y + 10, 20, 20);
-                        ctx.fillStyle = '#fff';
-                        ctx.font = '18px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText('Ladder', x + 20, y + 20);
-                    }
-
-                    // Draw player position
-                    if (playerPosition === (i - 1) * 10 + j) {
-                        ctx.fillStyle = '#0000ff';
-                        ctx.fillRect(x + 15, y + 15, 10, 10);
-                    }
-                }
-            }
-
-            playerTurn = true;
-            playerTurnElement.textContent = 'Your turn';
-        }
+        document.addEventListener('click', () => {
+            gradient.style.animation = 'gradient2 10s infinite';
+            radial.style.animation = 'gradient 10s infinite';
+            gradient2.style.animation = 'radial 10s infinite';
+            pulse.style.animation = 'pulse2 2s infinite';
+        });
     </script>
+
+    <style>
+        @keyframes gradient {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes radial {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+        @keyframes gradient2 {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes pulse2 {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
 </body>
 </html>
